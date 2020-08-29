@@ -1,30 +1,37 @@
 import 'package:flutter/material.dart';
 
-ThemeData ViragoTheme() {
+ThemeData viragoTheme() {
   TextTheme _basicTextTheme(TextTheme base) {
     return base.copyWith(
+        headline6: base.headline6.copyWith(
+          fontFamily: 'Oswald',
+          fontSize: 15.0,
+          color: Colors.black
+        ),
         headline5: base.headline5.copyWith(
           fontFamily: 'Oswald',
           fontSize: 22.0,
           color: Colors.black,
         ),
-        headline6: base.headline6.copyWith(
-          fontFamily: 'Merriweather',
-          fontSize: 15.0,
-          color: Colors.green
-        ),
         headline4: base.headline4.copyWith(
-          fontFamily: 'Roboto',
-          fontSize: 24.0,
-          color: Colors.white,
+          fontFamily: 'Oswald',
+          fontSize: 30.0,
+          color: Colors.black,
         ),
         headline3: base.headline3.copyWith(
-          fontFamily: 'Merriweather',
-          fontSize: 22.0,
-          color: Colors.grey,
+          fontFamily: 'Oswald',
+          fontSize: 35.0,
+          color: Colors.black,
+        ),
+        headline2: base.headline2.copyWith(
+          fontFamily: 'Oswald',
+          fontSize: 65.0,
+          color: Colors.black87,
         ),
         caption: base.caption.copyWith(
-          color: Color(0xFFCCC5AF),
+          color: Colors.black38,
+          fontFamily: 'Roboto',
+          fontSize: 15,
         ),
         bodyText2: base.bodyText2.copyWith(color: Color(0xFF807A6B)));
   }
