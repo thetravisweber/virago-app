@@ -4,9 +4,14 @@ import 'package:virago/pages/home.dart';
 import 'package:virago/pages/disclaimer.dart';
 import 'package:virago/pages/pagec.dart';
 import 'package:virago/pages/page2.dart';
+import 'package:flutter_config/flutter_config.dart';
 
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await FlutterConfig.loadEnvVariables();
+
   runApp(Virago());
 }
 
