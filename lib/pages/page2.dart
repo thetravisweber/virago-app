@@ -3,7 +3,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_config/flutter_config.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 
 class Page2 extends StatefulWidget {
@@ -33,9 +33,11 @@ class _Page2State extends State<Page2> {
   var checked = false;
 
   Future<List<FormofBirthControl>> fetchForms() async {
-    final response = await http.get(FlutterConfig.get('API_URL') + '/list-forms');
+    final response = await http.get(DotEnv().env['API_URL'] + '/list-forms');
 
     if (response.statusCode == 200) {
+
+      print(response.body);
       // If the server did return a 200 OK response,
       // then parse the JSON.
       var data = json.decode(response.body);
@@ -44,24 +46,24 @@ class _Page2State extends State<Page2> {
         list[i] = FormofBirthControl.fromJson(data[i]);
       }
 
+      print(list);
+
       return list;
 
     } else {
+      print("Bad Response");
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      throw Exception('Failed to load album');
+      throw Exception('Failed to load data');
     }
   }
 
-
-  Widget[] generateCheckBoxes() async
-  {
-    final forms = await fetchForms();
-
-    final children = List<Widget>();
-
-    for (var form in forms) {
-      children.add(Container(
+  Widget _buildCheckBoxList(BuildContext context, List<FormofBirthControl> forms) {
+    final checkBoxChildren = List<Widget>();
+    print(forms);
+    for (FormofBirthControl form in forms) {
+      print(form);
+      checkBoxChildren.add(Container(
         width: 400,
         child: CheckboxListTile(
           title: Text("test box"),
@@ -75,7 +77,9 @@ class _Page2State extends State<Page2> {
       ));
     }
 
-    return children;
+    return Column(
+      children: checkBoxChildren
+    );
   }
 
   @override
@@ -105,8 +109,16 @@ class _Page2State extends State<Page2> {
                 textAlign: TextAlign.center,
               ),
             ),
-            Column(
-              children: generateCheckBoxes(),
+            FutureBuilder(
+              future: fetchForms(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return _buildCheckBoxList(context, snapshot.data);
+                } else {
+                  print("no data");
+                  return Center(child: CircularProgressIndicator());
+                }
+              }
             ),
             RaisedButton(
               onPressed: () {
