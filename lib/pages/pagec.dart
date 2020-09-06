@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
+import 'package:virago/classes/Store.dart';
 import 'package:virago/classes/FormofBirthControl.dart';
 
 class PageC extends StatefulWidget {
@@ -59,6 +60,8 @@ class _PageCState extends State<PageC> {
             RaisedButton(
               onPressed: () async {
                 List<FormofBirthControl> forms = await fetchForms();
+                var _store = Store.of(context);
+                _store.formsOfBirthControl = forms;
                 Navigator.pushNamed(
                   context, 
                   'page2',

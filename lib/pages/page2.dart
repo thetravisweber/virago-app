@@ -2,9 +2,8 @@ import 'dart:convert';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:virago/classes/FormofBirthControl.dart';
+import 'package:virago/classes/Store.dart';
 
 
 class Page2 extends StatefulWidget {
@@ -20,44 +19,29 @@ class _Page2State extends State<Page2> {
   @override
   Widget build(BuildContext context) {
     final List<FormofBirthControl> forms = ModalRoute.of(context).settings.arguments;
+    Store _store = Store.of(context);
     
     Future<Null> nextPage() async {
-      List formIds = new List();
-      forms.forEach((form) => {
+      int checkedCount = 0;
+      for (FormofBirthControl form in forms) {
         if (form.checked) {
-          formIds.add(form.id)
-        }
-      });
+          checkedCount++;
 
-      if (formIds.length == 0) {
+          await form.fetchBrands();
+
+          _store.addUsedForm(form);
+        }
+      }
+
+      if (checkedCount == 0) {
         return;
       }
 
-      final response = await http.post(
-        DotEnv().env['API_URL'] + '/list-forms',
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(formIds)
+      Navigator.pushNamed(
+        context, 
+        'page11'
       );
 
-      if (response.statusCode == 200) {
-        // If the server did return a 200 OK response,
-        // then parse the JSON.
-        var data = json.decode(response.body);
-        var list = List<FormofBirthControl>();
-        for (var i = 0; i < data.length; i++) {
-          list.add(FormofBirthControl.fromJson(data[i]));
-        }
-
-        return list;
-
-      } else {
-        print("Bad Response");
-        // If the server did not return a 200 OK response,
-        // then throw an exception.
-        throw Exception('Failed to load data');
-      }
     }
 
     return Scaffold(
