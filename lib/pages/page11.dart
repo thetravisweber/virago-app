@@ -57,8 +57,6 @@ class _Page11State extends State<Page11> {
 
       _store.symptoms = await fetchSymptoms();
 
-      print(_store.symptoms);
-
       Navigator.pushNamed(
         context, 
         'page12'

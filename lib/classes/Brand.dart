@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:virago/classes/Symptom.dart';
 
 class Brand {
@@ -18,6 +20,11 @@ class Brand {
 
   void addSymptom(Symptom symptom) {
     this.symptoms.add(symptom);
+    this.symptomString = this._makeSymptomString();
+  }
+
+  void removeSymptom(Symptom symptom) {
+    this.symptoms.remove(symptom);
     this.symptomString = this._makeSymptomString();
   }
 

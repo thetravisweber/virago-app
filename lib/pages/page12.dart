@@ -18,6 +18,9 @@ class Page12 extends StatefulWidget {
 
 class _Page12State extends State<Page12> {
 
+  String testText = 'asdasdasdfafas';
+  List<Widget> reviewCards;
+  int renderKey = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +28,8 @@ class _Page12State extends State<Page12> {
     final List<Brand> brands = _store.usedBrands;
     
     Future<Null> nextPage() async {
+
+
 
       Navigator.pushNamed(
         context, 
@@ -81,6 +86,24 @@ class _Page12State extends State<Page12> {
     final _store = Store.of(context);
     final symptomsList = _store.symptoms;
 
+    void _showMultiSelect(BuildContext context) async {
+      await showDialog<Set<int>>(
+        context: context,
+        builder: (BuildContext context) {
+          return MultiSelectDialog(
+            parentState: this,
+            context: context,
+            symptoms: symptomsList,
+            brand: brand
+          );
+        },
+      );
+
+      setState(() {
+        this.renderKey++;
+      });
+    }
+
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
@@ -91,7 +114,7 @@ class _Page12State extends State<Page12> {
         borderRadius: BorderRadius.circular(10.0),
       ),
       width: 600,
-      height: 600,
+      height: 400,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -100,7 +123,35 @@ class _Page12State extends State<Page12> {
             style: Theme.of(context).textTheme.headline4,
             textAlign: TextAlign.center,
           ),
-          _buildSymptomsInput(brand, symptomsList),
+          Column(
+            children: <Widget>[
+              OutlineButton(
+                color: Colors.grey[50],
+                shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                child: Container(
+                  width: 400,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      _buildSymptomCards(context, brand),
+                      Icon(
+                        Icons.keyboard_arrow_down,
+                        size: 24.0,
+                        semanticLabel: 'Select More',
+                      ),
+                    ]
+                  ),
+                ),
+                onPressed: () {
+                  _showMultiSelect(context);
+                  setState(() {
+                    renderKey++;
+                  });
+                }
+              )
+            ]
+          ),
+          
           SmoothStarRating(
             allowHalfRating: true,
             onRated: (v) {
@@ -114,8 +165,10 @@ class _Page12State extends State<Page12> {
             spacing:0.0
           ),
           Container(
-            width: 350,
+            width: 400,
+            height: 200,
             child: TextField(
+              maxLines: 10,
               enableSuggestions: true,
               decoration: InputDecoration(
                 focusedBorder: OutlineInputBorder(
@@ -133,55 +186,101 @@ class _Page12State extends State<Page12> {
     );
   }
 
-  Widget _buildSymptomsInput(Brand brand, List<Symptom> symptomsList) {
-    
+  Widget _buildSymptomCards(BuildContext context, Brand brand) {
+    List<Widget> symptomCards = new List<Widget>();
 
-    void _showMultiSelect(BuildContext context) async {
-      await showDialog<Set<int>>(
-        context: context,
-        builder: (BuildContext context) {
-          return MultiSelectDialog(
-            symptoms: symptomsList,
-            brand: brand
-          );
-        },
-      );
+    for (Symptom symptom in brand.symptoms) {
+      symptomCards.add(_buildSymptomCard(context, brand, symptom));
     }
 
-    return Column(
-      children: <Widget>[
-        RaisedButton(
-          child: Text(brand.symptomString),
-          onPressed: () {
-            _showMultiSelect(context);
-          }
-        )
-      ]
+    if (symptomCards.length != 0) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            width: 350,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: symptomCards
+              )
+            )
+          )
+        ]
+      );
+    } else {
+      return Text('Pick Any Side Effects Experienced');
+    }
+  }
+
+  Widget _buildSymptomCard(BuildContext context, Brand brand, Symptom symptom) {
+    return Card(
+      color: Colors.blue,
+      child: Row(
+        children: <Widget>[
+          Text(
+            symptom.title,
+            style: TextStyle(
+              color: Colors.black
+            ),
+            textAlign: TextAlign.center,
+          ),
+          ButtonTheme(
+            minWidth: 20.0,
+            child:
+              FlatButton(
+                onPressed: () {
+                  brand.removeSymptom(symptom);
+                  setState(() {
+                    renderKey++;
+                  });
+                }, 
+                child: Icon(
+                Icons.clear,
+                size: 24.0,
+                semanticLabel: 'Delete Symptom',
+              ),
+            )
+          )
+        ]
+      )
     );
   }
 }
 
 class MultiSelectDialog extends StatefulWidget {
-  MultiSelectDialog({Key key, this.symptoms, this.brand}) : super(key: key);
+  MultiSelectDialog({Key key, this.parentState, this.context, this.symptoms, this.brand}) : super(key: key);
 
+  final _Page12State parentState;
+  final BuildContext context;
   final List<Symptom> symptoms;
   final Brand brand;
 
   @override
-  State<StatefulWidget> createState() => _MultiSelectDialogState();
+  State<StatefulWidget> createState() => _MultiSelectDialogState(parentState);
+
+  bool updateShouldNotify(MultiSelectDialog dialog) => true;
 }
 
 class _MultiSelectDialogState extends State<MultiSelectDialog> {
 
-  void _onItemCheckedChange(Brand brand, Symptom symptom, bool checked) {
+  _Page12State parent;
+  _MultiSelectDialogState(this.parent);
+
+  void onItemCheckedChange(BuildContext context, Brand brand, Symptom symptom, bool checked) {
     setState(() {
       if (checked) {
-        brand.symptoms.add(symptom);
+        brand.addSymptom(symptom);
       } else {
-        brand.symptoms.remove(symptom);
+        brand.removeSymptom(symptom);
       }
     });
+
+    parent.setState(() {
+      parent.renderKey++;
+    });
   }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -189,7 +288,11 @@ class _MultiSelectDialogState extends State<MultiSelectDialog> {
     List<Widget> symptomSelectList = new List<Widget>();
 
     for (Symptom symptom in widget.symptoms) {
-      symptomSelectList.add(_buildItem(widget.brand, symptom)); // add
+      symptomSelectList.add(_buildItem(widget.context, widget.brand, symptom)); // add
+    }
+
+    void _onSubmitTap() {
+      Navigator.pop(context);
     }
 
 
@@ -203,17 +306,23 @@ class _MultiSelectDialogState extends State<MultiSelectDialog> {
             children: symptomSelectList,
           ),
         ),
-      )
+      ),
+      actions: <Widget>[
+          FlatButton(
+            child: Text('OK'),
+            onPressed: _onSubmitTap,
+          )
+        ],
     );
   }
 
-  Widget _buildItem(Brand brand, Symptom symptom) {
+  Widget _buildItem(BuildContext context, Brand brand, Symptom symptom) {
     final checked = brand.symptoms.contains(symptom);
     return CheckboxListTile(
       value: checked,
       title: Text(symptom.title),
       controlAffinity: ListTileControlAffinity.leading,
-      onChanged: (checked) => _onItemCheckedChange(brand, symptom, checked),
+      onChanged: (checked) => onItemCheckedChange(context, brand, symptom, checked),
     );
   }
 }
