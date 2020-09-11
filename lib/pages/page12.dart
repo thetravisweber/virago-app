@@ -29,6 +29,9 @@ class _Page12State extends State<Page12> {
     
     Future<Null> nextPage() async {
 
+      for (Brand brand in brands) {
+        brand.reportToServer();
+      }
 
 
       Navigator.pushNamed(
