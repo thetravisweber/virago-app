@@ -1,12 +1,15 @@
 import 'dart:async';
 import 'dart:ui';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart'; 
+import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-import 'package:virago/classes/Store.dart';
 import 'package:virago/classes/Brand.dart';
 import 'package:virago/classes/Symptom.dart';
+import 'package:virago/classes/Review.dart';
 
 
 class Page12 extends StatefulWidget {
@@ -18,26 +21,101 @@ class Page12 extends StatefulWidget {
 
 class _Page12State extends State<Page12> {
 
-  String testText = 'asdasdasdfafas';
   List<Widget> reviewCards;
   int renderKey = 0;
 
   @override
   Widget build(BuildContext context) {
-    final _store = Store.of(context);
-    final List<Brand> brands = _store.usedBrands;
+    final Map arguments = ModalRoute.of(context).settings.arguments;
+    final List<Brand> brands = arguments['used_brands'];
+    final List<Symptom> symptoms = arguments['symptoms'];
+    bool confirmedSubmit = false;
+
+    Future<List<Review>> fetchReviews() async {
+      final response = await http.get(DotEnv().env['API_URL'] + '/list-reviews');
+
+      if (response.statusCode == 200) {
+        // If the server did return a 200 OK response,
+        // then parse the JSON.
+        List<Review> reviews = new List<Review>();
+
+        var data = json.decode(response.body);
+        for (var i = 0; i < data.length; i++) {
+          reviews.add(Review.fromJson(data[i]));
+        }
+
+        return reviews;
+
+      } else {
+        print("Bad Response");
+        // If the server did not return a 200 OK response,
+        // then throw an exception.
+        throw Exception('Failed to load data');
+      }
+    }
     
     Future<Null> nextPage() async {
 
+      List<Brand> editedBrands = new List<Brand>();
+
       for (Brand brand in brands) {
-        brand.reportToServer();
+        if (brand.isEdited()) {
+          editedBrands.add(brand);
+        }
+      }
+      
+      if (editedBrands.length == brands.length) {
+        confirmedSubmit = true;
       }
 
+      if (!confirmedSubmit) {
+        showDialog(
+          context: context, 
+          builder: (_) => new AlertDialog(
+            title: Text('You have not reviewed all the brands you have used.'),
+            content: Column(
+              children: <Widget>[
+                Text("are you sure you want to proceed?")
+              ],
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              FlatButton(
+                child: Text('Continue'),
+                onPressed: () {
+                  confirmedSubmit = true;
+                  Navigator.of(context).pop();
+                  nextPage();
+                },
+              ),
+            ],
+          ),
+          barrierDismissible: false
+        );
+      } else {
+        for (Brand brand in editedBrands) {
+          await brand.leaveReview();
+        }
 
-      Navigator.pushNamed(
-        context, 
-        'pagec'
-      );
+        List<Review> reviews = await fetchReviews();
+
+        Map pageData = {
+          'reviews': reviews
+        };
+
+        print(reviews);
+
+        Navigator.pushNamed(
+          context, 
+          'reviews',
+          arguments: pageData
+        );
+      }
     }
 
     return Scaffold(
@@ -54,7 +132,7 @@ class _Page12State extends State<Page12> {
                   shrinkWrap: true,
                   children: <Widget>[
                     Container(
-                      child: _buildUsageList(context, brands)
+                      child: _buildUsageList(context, brands, symptoms)
                     ),
                   ]
                 )
@@ -73,11 +151,11 @@ class _Page12State extends State<Page12> {
       );
   } // Widget
 
-  Widget _buildUsageList(BuildContext context, List<Brand> brands) {
+  Widget _buildUsageList(BuildContext context, List<Brand> brands, List<Symptom> symptoms) {
     final reviewCards = List<Widget>();
     
     for (Brand brand in brands) {
-      reviewCards.add(_reviewCard(context, brand));
+      reviewCards.add(_reviewCard(context, brand, symptoms));
     }
 
     return Column(
@@ -85,9 +163,7 @@ class _Page12State extends State<Page12> {
     );
   }
 
-  Widget _reviewCard(BuildContext context, Brand brand) {
-    final _store = Store.of(context);
-    final symptomsList = _store.symptoms;
+  Widget _reviewCard(BuildContext context, Brand brand, List<Symptom> symptomsList) {
 
     void _showMultiSelect(BuildContext context) async {
       await showDialog<Set<int>>(
@@ -158,9 +234,10 @@ class _Page12State extends State<Page12> {
           SmoothStarRating(
             allowHalfRating: true,
             onRated: (v) {
+              brand.setStarRating(v);
             },
             starCount: 5,
-            rating: 3,
+            rating: brand.rating,
             size: 55.0,
             isReadOnly: false,
             color: Colors.yellow,
@@ -182,6 +259,7 @@ class _Page12State extends State<Page12> {
                 ),
                 hintText: 'Leave A Review For ' + brand.title,
               ),
+              controller: brand.reviewController,
             )
           )
         ]

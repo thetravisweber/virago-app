@@ -24,6 +24,9 @@ class FormofBirthControl {
   }
 
   Future<Null> fetchBrands() async {
+    if (this.brands.length > 0) {
+      return;
+    }
     final response = await http.post(
       DotEnv().env['API_URL'] + '/list-brands-by-type',
       headers: <String, String>{

@@ -19,9 +19,11 @@ class _Page2State extends State<Page2> {
   @override
   Widget build(BuildContext context) {
     final List<FormofBirthControl> forms = ModalRoute.of(context).settings.arguments;
-    Store _store = Store.of(context);
     
     Future<Null> nextPage() async {
+
+      List<FormofBirthControl> formsUsed = new List<FormofBirthControl>();
+
       int checkedCount = 0;
       for (FormofBirthControl form in forms) {
         if (form.checked) {
@@ -29,7 +31,7 @@ class _Page2State extends State<Page2> {
 
           await form.fetchBrands();
 
-          _store.addUsedForm(form);
+          formsUsed.add(form);
         }
       }
 
@@ -39,7 +41,8 @@ class _Page2State extends State<Page2> {
 
       Navigator.pushNamed(
         context, 
-        'page11'
+        'page11',
+        arguments: formsUsed
       );
 
     }

@@ -1,9 +1,6 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:virago/classes/Store.dart';
 import 'package:virago/classes/FormofBirthControl.dart';
@@ -25,41 +22,25 @@ class _Page11State extends State<Page11> {
   @override
   Widget build(BuildContext context) {
     final _store = Store.of(context);
-    final List<FormofBirthControl> forms = _store.usedFormsOfBirthControl;
-
-    Future<List<Symptom>> fetchSymptoms() async {
-      final response = await http.get(DotEnv().env['API_URL'] + '/list-symptoms');
-
-      if (response.statusCode == 200) {
-        // If the server did return a 200 OK response,
-        // then parse the JSON.
-        List<Symptom> symptoms = new List<Symptom>();
-
-        var data = json.decode(response.body);
-        for (var i = 0; i < data.length; i++) {
-          symptoms.add(Symptom.fromJson(data[i]));
-        }
-
-        return symptoms;
-
-      } else {
-        print("Bad Response");
-        // If the server did not return a 200 OK response,
-        // then throw an exception.
-        throw Exception('Failed to load data');
-      }
-    }
+    final List<FormofBirthControl> forms = ModalRoute.of(context).settings.arguments;
     
     Future<Null> nextPage() async {
+      List<Brand> usedBrands = new List<Brand>();
       for (FormofBirthControl form in forms) {
-        _store.addUsedBrands(form.usedBrands());
+        usedBrands.addAll(form.usedBrands());
       }
 
-      _store.symptoms = await fetchSymptoms();
+      List<Symptom> symptoms = await _store.getSymptoms();
+
+      Map arguments = {
+          'symptoms': symptoms,
+          'used_brands': usedBrands
+        };
 
       Navigator.pushNamed(
         context, 
-        'page12'
+        'page12',
+        arguments: arguments
       );
     }
 
