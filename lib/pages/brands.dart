@@ -21,7 +21,6 @@ class BrandsPage extends StatefulWidget {
 class _BrandsPageState extends State<BrandsPage> {
   List<Brand> brands = new List<Brand>();
   List<FormofBirthControl> forms = new List<FormofBirthControl>();
-  int _selectedFormId = 0;
   int renderKey = 0;
 
   Future<Null> fetchBrands() async {
@@ -90,7 +89,7 @@ class _BrandsPageState extends State<BrandsPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              _buildFormDropDown(context, forms),
+              //_buildFormDropDown(context, forms),
               Expanded(
                 child: ListView(
                   scrollDirection: Axis.vertical,
@@ -184,35 +183,36 @@ class _BrandsPageState extends State<BrandsPage> {
     );
   }
 
-  Widget _buildFormDropDown(BuildContext context, List<FormofBirthControl> forms) {
-    if (forms.isEmpty) {
-      fetchForms();
-      return _buildWaiting(context);
-    } else {
-      return DropdownButton<String>(
-        value: _selectedFormId,
-        icon: Icon(Icons.arrow_downward),
-        iconSize: 24,
-        elevation: 16,
-        style: TextStyle(color: Colors.deepPurple),
-        underline: Container(
-          height: 2,
-          color: Colors.deepPurpleAccent,
-        ),
-        onChanged: (String newValue) {
-          setState(() {
-            _selectedFormId = newValue;
-          });
-        },
-        items: <String>['One', 'Two', 'Free', 'Four']
-            .map<DropdownMenuItem<String>>((String value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Text(value),
-          );
-        }).toList(),
-      );
-    }
+  // Widget _buildFormDropDown(BuildContext context, List<FormofBirthControl> forms) {
+  //   int _selectedFormId = 0;
+  //   if (forms.isEmpty) {
+  //     fetchForms();
+  //     return _buildWaiting(context);
+  //   } else {
+  //     return DropdownButton<int>(
+  //       value: _selectedFormId,
+  //       icon: Icon(Icons.arrow_downward),
+  //       iconSize: 24,
+  //       elevation: 16,
+  //       style: TextStyle(color: Colors.deepPurple),
+  //       underline: Container(
+  //         height: 2,
+  //         color: Colors.deepPurpleAccent,
+  //       ),
+  //       onChanged: (int newValue) {
+  //         setState(() {
+  //           _selectedFormId = newValue.toInt();
+  //         });
+  //       },
+  //       items: <int>[1, 2, 3, 4]
+  //           .map<DropdownMenuItem<int>>((int value) {
+  //         return DropdownMenuItem<int>(
+  //           value: value,
+  //           child: Text(value.toString()),
+  //         );
+  //       }).toList(),
+  //     );
+  //   }
     
-  }
+  // }
 }
