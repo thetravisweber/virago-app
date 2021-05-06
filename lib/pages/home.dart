@@ -23,9 +23,6 @@ class _MyHomePageState extends State<MyHomePage> {
               'Welcome!',
               style: Theme.of(context).textTheme.caption
             ),
-            Text(
-              'testing whats up'
-            ),
             RaisedButton(
               onPressed: () {
                 Navigator.pushNamed(context, 'disclaimer');
