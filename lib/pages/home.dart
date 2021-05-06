@@ -21,9 +21,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Text(
               'Welcome!',
-            ),
-            Text(
-              'testing whats up'
+              style: Theme.of(context).textTheme.caption
             ),
             RaisedButton(
               onPressed: () {
