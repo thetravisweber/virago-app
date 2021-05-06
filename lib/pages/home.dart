@@ -21,6 +21,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Text(
               'Welcome!',
+              style: Theme.of(context).textTheme.caption
             ),
             Text(
               'testing whats up'

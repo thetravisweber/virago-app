@@ -183,36 +183,36 @@ class _BrandsPageState extends State<BrandsPage> {
     );
   }
 
-  // Widget _buildFormDropDown(BuildContext context, List<FormofBirthControl> forms) {
-  //   int _selectedFormId = 0;
-  //   if (forms.isEmpty) {
-  //     fetchForms();
-  //     return _buildWaiting(context);
-  //   } else {
-  //     return DropdownButton<int>(
-  //       value: _selectedFormId,
-  //       icon: Icon(Icons.arrow_downward),
-  //       iconSize: 24,
-  //       elevation: 16,
-  //       style: TextStyle(color: Colors.deepPurple),
-  //       underline: Container(
-  //         height: 2,
-  //         color: Colors.deepPurpleAccent,
-  //       ),
-  //       onChanged: (int newValue) {
-  //         setState(() {
-  //           _selectedFormId = newValue.toInt();
-  //         });
-  //       },
-  //       items: <int>[1, 2, 3, 4]
-  //           .map<DropdownMenuItem<int>>((int value) {
-  //         return DropdownMenuItem<int>(
-  //           value: value,
-  //           child: Text(value.toString()),
-  //         );
-  //       }).toList(),
-  //     );
-  //   }
+  Widget _buildFormDropDown(BuildContext context, List<FormofBirthControl> forms) {
+    int _selectedFormId = 0;
+    if (forms.isEmpty) {
+      fetchForms();
+      return _buildWaiting(context);
+    } else {
+      return DropdownButton<int>(
+        value: _selectedFormId,
+        icon: Icon(Icons.arrow_downward),
+        iconSize: 24,
+        elevation: 16,
+        style: TextStyle(color: Colors.deepPurple),
+        underline: Container(
+          height: 2,
+          color: Colors.deepPurpleAccent,
+        ),
+        onChanged: (int newValue) {
+          setState(() {
+            _selectedFormId = newValue.toInt();
+          });
+        },
+        items: <int>[1, 2, 3, 4]
+            .map<DropdownMenuItem<int>>((int value) {
+          return DropdownMenuItem<int>(
+            value: value,
+            child: Text(value.toString()),
+          );
+        }).toList(),
+      );
+    }
     
-  // }
+  }
 }

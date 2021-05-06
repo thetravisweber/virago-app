@@ -42,7 +42,7 @@ ThemeData viragoTheme() {
       primaryColor: Color(0xffce107c),
       //primaryColor: Color(0xff4829b2),
       indicatorColor: Color(0xFF807A6B),
-      scaffoldBackgroundColor: Color(0xFFF5F5F5),
+      scaffoldBackgroundColor: Color.fromRGBO(174, 202, 218, 1),
       accentColor: Color(0xFFFFF8E1),
       iconTheme: IconThemeData(
         color: Colors.white,

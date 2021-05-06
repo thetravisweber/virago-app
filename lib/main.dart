@@ -16,9 +16,7 @@ import 'package:virago/classes/Store.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  print("Loading dotenv file");
   await DotEnv().load('.env');
-  print("Done Loading Env Variables");
 
   runApp(Virago());
 }
@@ -36,31 +34,16 @@ class Virago extends StatelessWidget {
           theme: viragoTheme(),
           home: MyHomePage(),
           routes: <String, WidgetBuilder> {
+            'home' : (BuildContext context) => MyHomePage(),
             'disclaimer' : (BuildContext context) => DisclaimerPage(),
             'pagec' : (BuildContext context) => PageC(),
             'page2' : (BuildContext context) => Page2(),
             'page11' : (BuildContext context) => Page11(),
             'page12' : (BuildContext context) => Page12(),
-            'home' : (BuildContext context) => MyHomePage(),
+            
             'reviews' : (BuildContext context) => BrandsPage(),
           },
         )
       );
   }
-
-  // @override
-  // Widget build(BuildContext context) {
-
-  //   return MaterialApp(
-  //     title: 'Virago',
-  //     theme: viragoTheme(),
-  //     home: MyHomePage(),
-  //     routes: <String, WidgetBuilder> {
-  //       'disclaimer' : (BuildContext context) => DisclaimerPage(),
-  //       'pagec' : (BuildContext context) => PageC(),
-  //       'page2' : (BuildContext context) => Page2(),
-  //       'home' : (BuildContext context) => MyHomePage(),
-  //     },
-  //   );
-  // }
 }
