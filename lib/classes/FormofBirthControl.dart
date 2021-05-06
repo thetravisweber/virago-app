@@ -38,7 +38,7 @@ class FormofBirthControl {
       return;
     }
     final response = await http.post(
-      DotEnv().env['API_URL'] + '/list-brands-by-type',
+      Uri.parse(env['API_URL'] + '/list-brands-by-type'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

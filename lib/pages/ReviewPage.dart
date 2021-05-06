@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:virago/classes/Brand.dart';
 import 'package:virago/classes/FormofBirthControl.dart';
 import 'package:virago/classes/Store.dart';
 
@@ -80,18 +79,7 @@ class _ReviewPageState extends State<ReviewPage>
 
   Widget _buildWaiting(context) {
 
-    AnimationController _animatorController = new AnimationController();
-
-    final _colorTween = _animatorController.drive(
-      ColorTween(
-        begin: Colors.yellow,
-        end: Colors.blue
-      )
-    );
-
-    return CircularProgressIndicator(
-      valueColor: _colorTween
-    );
+    return Text('hi');
 
   }
 

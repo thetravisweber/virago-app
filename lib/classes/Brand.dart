@@ -71,7 +71,7 @@ class Brand {
   Future<Null> leaveReview() async {
 
     final response = await http.post(
-      DotEnv().env['API_URL'] + '/submit-review',
+      Uri.parse(env['API_URL'] + '/submit-review'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

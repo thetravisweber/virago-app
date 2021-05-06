@@ -10,8 +10,8 @@ import 'package:virago/classes/Symptom.dart';
 
 
 class Store extends Model {
-  List<FormofBirthControl> _forms = new List<FormofBirthControl>();
-  List<Symptom> _symptoms = new List<Symptom>();
+  List<FormofBirthControl> _forms = [];
+  List<Symptom> _symptoms = [];
 
   static Store of(BuildContext context) => 
       ScopedModel.of<Store>(context);
@@ -53,12 +53,12 @@ class Store extends Model {
 
 
   Future<List<Symptom>> _fetchSymptoms() async {
-    final response = await http.get(DotEnv().env['API_URL'] + '/list-symptoms');
+    final response = await http.get(Uri.parse(env['API_URL'] + '/list-symptoms'));
 
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
-      List<Symptom> symptoms = new List<Symptom>();
+      List<Symptom> symptoms = [];
 
       var data = json.decode(response.body);
       for (var i = 0; i < data.length; i++) {
@@ -76,14 +76,14 @@ class Store extends Model {
   }
 
   Future<List<FormofBirthControl>> _fetchForms() async {
-    final response = await http.get(DotEnv().env['API_URL'] + '/list-forms');
+    final response = await http.get(Uri.parse(env['API_URL'] + '/list-forms'));
 
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
       var data = json.decode(response.body);
       
-      var list = List<FormofBirthControl>();
+      var list = [];
       for (var i = 0; i < data.length; i++) {
         list.add(FormofBirthControl.fromJson(data[i]));
       }
