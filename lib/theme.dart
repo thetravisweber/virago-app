@@ -28,6 +28,10 @@ ThemeData viragoTheme() {
           fontSize: 65.0,
           color: Colors.black87,
         ),
+        headline1: base.headline1.copyWith(
+          fontSize: 120.0,
+          color: Colors.black,
+        ),
         caption: base.caption.copyWith(
           color: Colors.black38,
           fontFamily: 'Roboto',
