@@ -6,9 +6,9 @@ import 'package:virago/pages/pagec.dart';
 import 'package:virago/pages/page2.dart';
 import 'package:virago/pages/page11.dart';
 import 'package:virago/pages/page12.dart';
-import 'package:virago/pages/brands.dart';
+import 'package:virago/pages/ReviewPage.dart';
 
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 import 'package:scoped_model/scoped_model.dart';
 import 'package:virago/classes/Store.dart';
 
@@ -16,7 +16,7 @@ import 'package:virago/classes/Store.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await DotEnv().load('.env');
+  await DotEnv.load(fileName: '.env');
 
   runApp(Virago());
 }
@@ -41,7 +41,7 @@ class Virago extends StatelessWidget {
             'page11' : (BuildContext context) => Page11(),
             'page12' : (BuildContext context) => Page12(),
             
-            'reviews' : (BuildContext context) => BrandsPage(),
+            'reviews' : (BuildContext context) => ReviewPage(),
           },
         )
       );

@@ -23,12 +23,22 @@ class FormofBirthControl {
     );
   }
 
+  List<Brand> usedBrands() {
+    List<Brand> checkedBrands = new List<Brand>();
+    for (Brand brand in this.brands) {
+      if (brand.checked) {
+        checkedBrands.add(brand);
+      }
+    }
+    return checkedBrands;
+  }
+
   Future<Null> fetchBrands() async {
     if (this.brands.length > 0) {
       return;
     }
     final response = await http.post(
-      DotEnv().env['API_URL'] + '/list-brands-by-type',
+      Uri.parse(env['API_URL'] + '/list-brands-by-type'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -51,15 +61,5 @@ class FormofBirthControl {
       // then throw an exception.
       throw Exception('Failed to load data');
     }
-  }
-
-  List<Brand> usedBrands() {
-    List<Brand> checkedBrands = new List<Brand>();
-    for (Brand brand in this.brands) {
-      if (brand.checked) {
-        checkedBrands.add(brand);
-      }
-    }
-    return checkedBrands;
   }
 }

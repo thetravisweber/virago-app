@@ -32,7 +32,7 @@ class _Page12State extends State<Page12> {
     bool confirmedSubmit = false;
 
     Future<List<Review>> fetchReviews() async {
-      final response = await http.get(DotEnv().env['API_URL'] + '/list-reviews');
+      final response = await http.get(Uri.parse(env['API_URL'] + '/list-reviews'));
 
       if (response.statusCode == 200) {
         // If the server did return a 200 OK response,

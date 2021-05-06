@@ -25,7 +25,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             RaisedButton(
               onPressed: () {
-                Navigator.pushNamed(context, 'disclaimer');
+                Navigator.pushNamed(context, 'reviews');
               },
               child: Text(
                 "Get Started"
