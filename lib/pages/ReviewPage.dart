@@ -15,10 +15,10 @@ class _ReviewPageState extends State<ReviewPage>
 
   List<FormofBirthControl> _forms = [];
   int _renderKey = 0;
-  bool _fetchingForms = false;
+  bool _fetchedForms = false;
 
   Future<Null> _getForms(Store store) async {
-    _fetchingForms = true;
+    _fetchedForms = true;
     _forms = await store.getForms();
     setState(() {
       _renderKey++;
@@ -30,8 +30,8 @@ class _ReviewPageState extends State<ReviewPage>
   {
     final _store = Store.of(context);
     
-    if (!_fetchingForms) {
-      // _getForms(_store);
+    if (!_fetchedForms) {
+      _getForms(_store);
     }
 
     return Scaffold(
@@ -42,7 +42,7 @@ class _ReviewPageState extends State<ReviewPage>
         child: Column(
           children: <Widget>[
             Text(
-              'hello',
+              'Reviews Page',
               style: Theme.of(context).textTheme.headline4,
             ),
             _buildBrandDropDowns(context, _forms)
@@ -79,7 +79,7 @@ class _ReviewPageState extends State<ReviewPage>
 
   Widget _buildWaiting(context) {
 
-    return Text('hi');
+    return Text('waiting for data');
 
   }
 
