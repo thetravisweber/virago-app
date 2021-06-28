@@ -40,7 +40,17 @@ class _ReviewPageState extends State<ReviewPage>
               "Here is where the reviews go",
               style: Theme.of(context).textTheme.headline4
             ),
-            _buildBrands(context)
+            Expanded(
+              child: ListView(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                children: <Widget>[
+                  Container(
+                    child: _buildBrands(context)
+                  ),
+                ]
+              )
+            ), 
           ]
         )
       )
@@ -56,16 +66,27 @@ class _ReviewPageState extends State<ReviewPage>
 
     List<Widget> brandWidgets = [];
     _brands.forEach((brand) { 
-      brandWidgets.add(_buildBrand(brand)); 
+      brandWidgets.add(_buildBrandCard(brand)); 
     });
+
     return Column(
       children: brandWidgets,
     );
   }
 
-  Widget _buildBrand(Brand brand)
+  Widget _buildBrandCard(Brand brand)
   {
-    return Text(brand.title);
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xff7c94b6),
+        border: Border.all(
+          color: Colors.black,
+          width: 8,
+        ),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Text(brand.title)
+    );
   }
 
   Widget _buildWaitingLoader()
