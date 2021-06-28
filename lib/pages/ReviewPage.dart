@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:virago/classes/Brand.dart';
 import 'package:virago/classes/Review.dart';
 
 
@@ -14,6 +15,8 @@ class ReviewPage extends StatefulWidget {
 class _ReviewPageState extends State<ReviewPage>
 {
 
+  List<Brand> _brands = [];
+
   @override
   Widget build(BuildContext context) 
   {
@@ -28,16 +31,22 @@ class _ReviewPageState extends State<ReviewPage>
               "Here is where the reviews go",
               style: Theme.of(context).textTheme.headline4
             ),
-            _buildReviews()
+            _buildBrands()
           ]
         )
       )
     );
   }
 
-  Widget _buildReviews()
+  Widget _buildBrands()
   {
-    // List<Review> _reviews = 
-    return Text("uncomment the thing above");
+    if (_brands.isEmpty) {
+      return _buildWaitingLoader();
+    }
+  }
+
+  Widget _buildWaitingLoader()
+  {
+    return Text("waiting", style: Theme.of(context).textTheme.headline6);
   }
 }
