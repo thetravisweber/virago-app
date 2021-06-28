@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:virago/classes/FormofBirthControl.dart';
-import 'package:virago/classes/Store.dart';
 
 
 class ReviewPage extends StatefulWidget {
@@ -10,30 +8,13 @@ class ReviewPage extends StatefulWidget {
   _ReviewPageState createState() => _ReviewPageState();
 }
 
+
+
 class _ReviewPageState extends State<ReviewPage>
 {
-
-  List<FormofBirthControl> _forms = [];
-  int _renderKey = 0;
-  bool _fetchedForms = false;
-
-  Future<Null> _getForms(Store store) async {
-    _fetchedForms = true;
-    _forms = await store.getForms();
-    setState(() {
-      _renderKey++;
-    });
-  }
-  
   @override
   Widget build(BuildContext context) 
   {
-    final _store = Store.of(context);
-    
-    if (!_fetchedForms) {
-      _getForms(_store);
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: Text("Reviews")
@@ -45,42 +26,9 @@ class _ReviewPageState extends State<ReviewPage>
               'Reviews Page',
               style: Theme.of(context).textTheme.headline4,
             ),
-            _buildBrandDropDowns(context, _forms)
           ]
         )
       ),
     );
   }
-
-  Widget _buildBrandDropDowns(BuildContext context, List<FormofBirthControl> forms) 
-  {
-    if (forms.isEmpty) {
-      return _buildWaiting(context);
-    }
-
-    List<Widget> formDropWidgets = List<Widget>();
-
-    for (final form in forms) {
-      formDropWidgets.add(_buildFormDropDown(form));
-    }
-
-    return Column(
-      children: formDropWidgets,
-    );
-  }
-
-  Widget _buildFormDropDown(FormofBirthControl form)
-  { 
-    return Text(
-      form.title,
-      style: Theme.of(context).textTheme.headline6,
-    );
-  }
-
-  Widget _buildWaiting(context) {
-
-    return Text('waiting for data');
-
-  }
-
 }
