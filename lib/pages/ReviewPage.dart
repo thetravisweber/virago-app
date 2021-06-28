@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:virago/classes/Review.dart';
 
 
 class ReviewPage extends StatefulWidget {
@@ -12,6 +13,7 @@ class ReviewPage extends StatefulWidget {
 
 class _ReviewPageState extends State<ReviewPage>
 {
+
   @override
   Widget build(BuildContext context) 
   {
@@ -23,12 +25,19 @@ class _ReviewPageState extends State<ReviewPage>
         child: Column(
           children: <Widget>[
             Text(
-              'Reviews Page',
-              style: Theme.of(context).textTheme.headline4,
+              "Here is where the reviews go",
+              style: Theme.of(context).textTheme.headline4
             ),
+            _buildReviews()
           ]
         )
-      ),
+      )
     );
+  }
+
+  Widget _buildReviews()
+  {
+    // List<Review> _reviews = 
+    return Text("uncomment the thing above");
   }
 }
