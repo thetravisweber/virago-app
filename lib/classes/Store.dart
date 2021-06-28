@@ -85,7 +85,7 @@ class Store extends Model {
       // then parse the JSON.
       var data = json.decode(response.body);
       
-      var list = [];
+      List<FormofBirthControl> list = [];
       for (var i = 0; i < data.length; i++) {
         list.add(FormofBirthControl.fromJson(data[i]));
       }
