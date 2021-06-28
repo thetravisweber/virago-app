@@ -17,10 +17,13 @@ class _ReviewPageState extends State<ReviewPage>
 {
   List<Brand> _brands = [];
 
-  Future<Null> _getBrands(BuildContext context)
+  Future<Null> _getBrands(BuildContext context) async
   {
     final Store _store = Store.of(context);
-    _brands = await _store.getBrands();
+    List<Brand> brands = await _store.getBrands();
+    setState(() {
+      _brands = brands;
+    });
   }
 
   @override

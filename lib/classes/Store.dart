@@ -41,7 +41,7 @@ class Store extends Model {
       return this._brands;
     }
 
-    this._brands = await this._fetchForms();
+    this._brands = await this._fetchBrands();
     return this._brands;
   }
 
@@ -88,6 +88,29 @@ class Store extends Model {
       var list = [];
       for (var i = 0; i < data.length; i++) {
         list.add(FormofBirthControl.fromJson(data[i]));
+      }
+
+      return list;
+
+    } else {
+      print("Bad Response");
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load data');
+    }
+  }
+
+  Future<List<Brand>> _fetchBrands() async {
+    final response = await http.get(Uri.parse(env['API_URL'] + '/list-brands'));
+
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      var data = json.decode(response.body);
+      
+      List<Brand> list = [];
+      for (var i = 0; i < data.length; i++) {
+        list.add(Brand.fromJson(data[i]));
       }
 
       return list;
