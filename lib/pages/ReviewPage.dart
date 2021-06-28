@@ -54,8 +54,18 @@ class _ReviewPageState extends State<ReviewPage>
       return _buildWaitingLoader();
     }
 
-    // going to have to actually render the brands later
-    return Text("got Brands!!!");
+    List<Widget> brandWidgets = [];
+    _brands.forEach((brand) { 
+      brandWidgets.add(_buildBrand(brand)); 
+    });
+    return Column(
+      children: brandWidgets,
+    );
+  }
+
+  Widget _buildBrand(Brand brand)
+  {
+    return Text(brand.title);
   }
 
   Widget _buildWaitingLoader()
