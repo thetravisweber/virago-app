@@ -4,6 +4,7 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:virago/classes/Brand.dart';
 
 import 'package:virago/classes/FormofBirthControl.dart';
 import 'package:virago/classes/Symptom.dart';
@@ -12,6 +13,7 @@ import 'package:virago/classes/Symptom.dart';
 class Store extends Model {
   List<FormofBirthControl> _forms = [];
   List<Symptom> _symptoms = [];
+  List<Brand> _brands = [];
 
   static Store of(BuildContext context) => 
       ScopedModel.of<Store>(context);
@@ -34,13 +36,13 @@ class Store extends Model {
     return this._forms;
   }
 
-  Future<List<FormofBirthControl>> getReviews() async {
-    if (this._forms.length > 0) {
-      return this._forms;
+  Future<List<Brand>> getBrands() async {
+    if (this._brands.length > 0) {
+      return this._brands;
     }
 
-    this._forms = await this._fetchForms();
-    return this._forms;
+    this._brands = await this._fetchBrands();
+    return this._brands;
   }
 
 
@@ -83,9 +85,32 @@ class Store extends Model {
       // then parse the JSON.
       var data = json.decode(response.body);
       
-      var list = [];
+      List<FormofBirthControl> list = [];
       for (var i = 0; i < data.length; i++) {
         list.add(FormofBirthControl.fromJson(data[i]));
+      }
+
+      return list;
+
+    } else {
+      print("Bad Response");
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load data');
+    }
+  }
+
+  Future<List<Brand>> _fetchBrands() async {
+    final response = await http.get(Uri.parse(env['API_URL'] + '/list-brands'));
+
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      var data = json.decode(response.body);
+      
+      List<Brand> list = [];
+      for (var i = 0; i < data.length; i++) {
+        list.add(Brand.fromJson(data[i]));
       }
 
       return list;

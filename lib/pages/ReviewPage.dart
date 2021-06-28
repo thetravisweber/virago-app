@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:virago/classes/FormofBirthControl.dart';
+import 'package:virago/classes/Brand.dart';
+import 'package:virago/classes/Review.dart';
 import 'package:virago/classes/Store.dart';
 
 
@@ -10,30 +11,24 @@ class ReviewPage extends StatefulWidget {
   _ReviewPageState createState() => _ReviewPageState();
 }
 
+
+
 class _ReviewPageState extends State<ReviewPage>
 {
+  List<Brand> _brands = [];
 
-  List<FormofBirthControl> _forms = [];
-  int _renderKey = 0;
-  bool _fetchingForms = false;
-
-  Future<Null> _getForms(Store store) async {
-    _fetchingForms = true;
-    _forms = await store.getForms();
+  Future<Null> _getBrands(BuildContext context) async
+  {
+    final Store _store = Store.of(context);
+    List<Brand> brands = await _store.getBrands();
     setState(() {
-      _renderKey++;
+      _brands = brands;
     });
   }
-  
+
   @override
   Widget build(BuildContext context) 
   {
-    final _store = Store.of(context);
-    
-    if (!_fetchingForms) {
-      // _getForms(_store);
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: Text("Reviews")
@@ -42,45 +37,60 @@ class _ReviewPageState extends State<ReviewPage>
         child: Column(
           children: <Widget>[
             Text(
-              'hello',
-              style: Theme.of(context).textTheme.headline4,
+              "Here is where the reviews go",
+              style: Theme.of(context).textTheme.headline4
             ),
-            _buildBrandDropDowns(context, _forms)
+            Expanded(
+              child: ListView(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                children: <Widget>[
+                  Container(
+                    child: _buildBrands(context)
+                  ),
+                ]
+              )
+            ), 
           ]
         )
-      ),
+      )
     );
   }
 
-  Widget _buildBrandDropDowns(BuildContext context, List<FormofBirthControl> forms) 
+  Widget _buildBrands(BuildContext context)
   {
-    if (forms.isEmpty) {
-      return _buildWaiting(context);
+    if (_brands.isEmpty) {
+      _getBrands(context);
+      return _buildWaitingLoader();
     }
 
-    List<Widget> formDropWidgets = List<Widget>();
-
-    for (final form in forms) {
-      formDropWidgets.add(_buildFormDropDown(form));
-    }
+    List<Widget> brandWidgets = [];
+    _brands.forEach((brand) { 
+      brandWidgets.add(_buildBrandCard(brand)); 
+    });
 
     return Column(
-      children: formDropWidgets,
+      children: brandWidgets,
     );
   }
 
-  Widget _buildFormDropDown(FormofBirthControl form)
-  { 
-    return Text(
-      form.title,
-      style: Theme.of(context).textTheme.headline6,
+  Widget _buildBrandCard(Brand brand)
+  {
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xff7c94b6),
+        border: Border.all(
+          color: Colors.black,
+          width: 8,
+        ),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Text(brand.title)
     );
   }
 
-  Widget _buildWaiting(context) {
-
-    return Text('hi');
-
+  Widget _buildWaitingLoader()
+  {
+    return Text("waiting", style: Theme.of(context).textTheme.headline6);
   }
-
 }
