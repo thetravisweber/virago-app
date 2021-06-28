@@ -4,6 +4,7 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:virago/classes/Brand.dart';
 
 import 'package:virago/classes/FormofBirthControl.dart';
 import 'package:virago/classes/Symptom.dart';
@@ -12,6 +13,7 @@ import 'package:virago/classes/Symptom.dart';
 class Store extends Model {
   List<FormofBirthControl> _forms = [];
   List<Symptom> _symptoms = [];
+  List<Brand> _brands = [];
 
   static Store of(BuildContext context) => 
       ScopedModel.of<Store>(context);
@@ -34,13 +36,13 @@ class Store extends Model {
     return this._forms;
   }
 
-  Future<List<FormofBirthControl>> getReviews() async {
-    if (this._forms.length > 0) {
-      return this._forms;
+  Future<List<Brand>> getBrands() async {
+    if (this._brands.length > 0) {
+      return this._brands;
     }
 
-    this._forms = await this._fetchForms();
-    return this._forms;
+    this._brands = await this._fetchForms();
+    return this._brands;
   }
 
 
