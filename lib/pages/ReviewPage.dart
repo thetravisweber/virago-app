@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:virago/WidgetClasses/PointPainter.dart';
 import 'package:virago/classes/Brand.dart';
 import 'package:virago/classes/Review.dart';
 import 'package:virago/classes/Store.dart';
+import 'package:virago/pages/page12.dart';
 
 
 class ReviewPage extends StatefulWidget {
@@ -36,9 +40,30 @@ class _ReviewPageState extends State<ReviewPage>
       body: Center(
         child: Column(
           children: <Widget>[
-            Text(
-              "Here is where the reviews go",
-              style: Theme.of(context).textTheme.headline4
+            SizedBox(
+              height: 40,
+              child: TextButton(
+                child: Container(
+                  width: 400,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        "Sorted by: most popular",
+                        style: Theme.of(context).textTheme.headline4
+                      ),
+                      Icon(
+                        Icons.keyboard_arrow_down,
+                        size: 24.0,
+                        semanticLabel: 'Select More',
+                      ),
+                    ]
+                  ),
+                ),
+                onPressed: () {
+                  
+                }
+              )
             ),
             Expanded(
               child: ListView(
@@ -78,14 +103,59 @@ class _ReviewPageState extends State<ReviewPage>
   {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xff7c94b6),
+        color: const Color(000000),
         border: Border.all(
           color: Colors.black,
-          width: 8,
+          width: 2,
         ),
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Text(brand.title)
+      child: SizedBox(
+        width:400,
+        height:40,
+        child: Row(
+          children: [
+            TextButton(
+              onPressed: () {
+                Navigator.pushNamed(context, 'home');
+              },
+              style: TextButton.styleFrom(
+                minimumSize: Size(0, 10)
+              ),
+            child: Text(
+                brand.title
+              )
+           ),
+           Expanded(
+            child: CustomPaint(
+              painter: PointPainter(),
+            ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pushNamed(context, 'home');
+              },
+              style: TextButton.styleFrom(
+                alignment: Alignment.centerRight,
+                minimumSize: Size(0, 10)
+              ),
+              child: Row(
+                children: [
+                  Text(
+                    brand.rating.toString()
+                  ),
+                  Icon(
+                    Icons.star,
+                    color: Colors.yellow,
+                    size: 24.0,
+                    semanticLabel: 'Text to announce in accessibility modes',
+                  )
+                ]
+              )
+            )
+          ]
+        )
+      )
     );
   }
 
@@ -93,4 +163,10 @@ class _ReviewPageState extends State<ReviewPage>
   {
     return Text("waiting", style: Theme.of(context).textTheme.headline6);
   }
+
+  String _getPeriods(brandTitle) {
+    String periods = "."*(80-(brandTitle.length*2.3).floor());
+    return periods;
+  }
+
 }

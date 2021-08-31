@@ -32,7 +32,7 @@ class Virago extends StatelessWidget {
         child: MaterialApp(
           title: 'Virago',
           theme: viragoTheme(),
-          home: MyHomePage(),
+          home: ReviewPage(),
           routes: <String, WidgetBuilder> {
             'home' : (BuildContext context) => MyHomePage(),
             'disclaimer' : (BuildContext context) => DisclaimerPage(),

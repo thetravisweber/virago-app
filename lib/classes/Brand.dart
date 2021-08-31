@@ -12,16 +12,17 @@ class Brand {
   bool checked = false;
   bool edited = false;
   double rating = 3;
-  List<Symptom> symptoms = new List<Symptom>();
+  List<Symptom> symptoms = [];
   TextEditingController reviewController = new TextEditingController();
   
 
-  Brand({this.id, this.title});
+  Brand({this.id, this.title, this.rating});
 
   factory Brand.fromJson(Map<String, dynamic> json) {
     return Brand(
       id: json['id'],
       title: json['name'],
+      rating: json['rating'],
     );
   }
 
